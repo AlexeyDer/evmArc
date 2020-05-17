@@ -16,9 +16,8 @@ int compare(char *buf, char *sym)
 
 int rk_readKey(enum Key *key)
 {
-
     int term = open(TERM, O_RDWR);
-    char buf[8];
+    char buf[12];
 
     buf[7] = 0;
     tcgetattr(0, &origin);
@@ -74,6 +73,10 @@ int rk_readKey(enum Key *key)
     if (compare(buf, "c"))
     {
         *key = F6;
+    }
+    if (compare(buf, "e"))
+    {
+        *key = ENTER;
     }
     if (strcmp(buf, "\E[15~") == 0)
     {

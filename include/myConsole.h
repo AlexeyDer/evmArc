@@ -1,12 +1,21 @@
-#ifndef _MYCONSOLE_H_
-#define _MYCONSOLE_H_
+#ifndef MYCONSOLE_H
+#define MYCONSOLE_H
 
-#include "mySimpleComputer.h"
 #include "myTerm.h"
-#include "myBigChars.h"
+#include "myBigChar.h"
+#include "mySimpleComputer.h"
+#include "myReadKey.h"
+#include "cpu.h"
+#include <signal.h>
+#include <sys/time.h>
+#include <unistd.h>
 
-static int command;
-static int operand;
+typedef void (*sighandler_t)(int);
+sighandler_t signal(int signum, sighandler_t handler);
+
+static struct itimerval nval;
+
+void settimer(struct itimerval *nval);
 
 #define STD_X_MEM 1
 #define STD_Y_MEM 1
@@ -16,15 +25,53 @@ static int operand;
 #define STD_X_ACC 1
 #define STD_Y_ACC 63
 
+#define MEM 0
+#define ACC 1
+#define INSTR 2
+#define OPER 3
+#define KEYS 4
+#define BC 5
+#define IO 6
+#define FLAGS 7
+
+static int command;
+static int operand;
+
 static int pointer_mem;
 
-void reset();
+static int visual_access;
+
+//Console part
+void console();
+void reset(int siq);
+void run(int siq);
+
+int setVisualNull();
+
+int readFromConsole();
+int writeFromConsole(int value);
+
+int updateMemVisual();
+int visualRegGet(int flag, int *value);
+int visualRegSet(int flag, int value);
+
+void setAcc();
+int setInstrCounter();
+void setPointer();
+void setOperation();
+
+void messageBox(int x, int y, int dx, int dy);
+void clrMessageBox(int x, int y);
+
+//Visual part
+void showAll();
+void visualInOut();
 void visualMemory();
 void visualAccumulator();
 int visualCounter();
+void visualOperation();
 void visualFlags();
 void visualMenu();
-void visualOperation();
 void visualBigCharArea();
 
 #endif

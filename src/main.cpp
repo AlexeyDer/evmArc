@@ -1,21 +1,14 @@
+#include "mySimpleComputer.h"
+#include "myTerm.h"
+#include "myBigChar.h"
 #include "myConsole.h"
 
-int main()
-{
-  int value;
-  mt_clrscr();
 
-  pointer_mem = 0;
-  reset();
-  visualMemory();
-  visualAccumulator();
-  visualCounter();
-  visualOperation();
-  visualFlags();
-  visualMenu();
-  visualBigCharArea();
+int main() {
 
-  mt_gotoXY(30, 1);
+    sc_regInit();
+    sc_memoryInit();
+    console();
 
-  return 0;
+    return 0;
 }
