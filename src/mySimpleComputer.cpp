@@ -1,7 +1,5 @@
 #include "mySimpleComputer.h"
 
-// int registr;
-
 int sc_memoryInit()
 {
     for (int i = 0; i < N; i++)
@@ -234,7 +232,7 @@ int sc_commandDecode(int value, int *command, int *operand)
         return 1;
     }
 
-    *operand = value & 0b1111111;
+    *operand = value & 0x7;
 
     return 0;
 }

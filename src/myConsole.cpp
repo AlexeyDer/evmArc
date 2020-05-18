@@ -2,10 +2,10 @@
 
 void settimer(struct itimerval *nval)
 {
-	nval->it_interval.tv_sec = 1;
-	nval->it_interval.tv_usec = 500;
+	nval->it_interval.tv_sec = 0;
+	nval->it_interval.tv_usec = 0;
 	nval->it_value.tv_sec = 0;
-	nval->it_value.tv_usec = 2000;
+	nval->it_value.tv_usec = 200000;
 }
 
 void run(int siq)
@@ -219,12 +219,13 @@ void setOperation()
 	mt_setbgcolor(BLACK);
 
 	int command, operand;
-	printf(" Command: ");
-	fscanf(stdin, "%d", &command);
-	printf(" Operand: ");
-	fscanf(stdin, "%d", &operand);
+	printf(" Command and Operand: ");
+	fscanf(stdin, "%d %d", &command, &operand);
 
-	sc_commandEncode(command, operand, &memory[instruction_counter]);
+	int value;
+	sc_commandEncode(command, operand, &value);
+	sc_memorySet(pointer_mem, value);
+
 	mt_setbgcolor(BLACK);
 	clrMessageBox(x, y);
 	setVisualNull();
@@ -504,7 +505,7 @@ void visualOperation()
 	printf(" Operation ");
 
 	sc_memoryGet(pointer_mem, &value);
-	sc_commandDecode(memory[pointer_mem], &command, &operand);
+	sc_commandDecode(value, &command, &operand);
 
 	mt_setbgcolor(BLACK);
 	mt_gotoXY(x + 1, y + 6);

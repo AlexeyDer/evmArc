@@ -51,14 +51,16 @@ int ALU(int command, int operand)
 int CU(void)
 {
     int command, operand;
+    int value;
+    sc_memoryGet(instruction_counter, &value);
 
-    if (sc_commandDecode(memory[instruction_counter], &command, &operand))
+    if (sc_commandDecode(value, &command, &operand))
     {
         sc_regSet(ERRORFLAG, 1);
         return 1;
     }
 
-    int value = 0;
+    value = 0;
 
     if (command < 30 || command > 33)
     {
@@ -80,13 +82,15 @@ int CU(void)
             mt_setbgcolor(BLACK);
 
             int value;
-            fscanf(stdin, "%x", &value); //
+            fscanf(stdin, "%d", &value); //
 
             if (value > 65535)
             {
                 sc_regSet(ERRORADD, 1);
                 break;
             }
+
+            sc_accumSet(value);
             sc_memorySet(operand, value);
             mt_setbgcolor(BLACK);
             clrMessageBox(x, y);
