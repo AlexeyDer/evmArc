@@ -52,13 +52,15 @@ int CU(void)
 {
     int command, operand;
     int value;
-    sc_memoryGet(instruction_counter, &value);
 
-    if (sc_commandDecode(value, &command, &operand))
+    sc_memoryGet(pointer_mem, &value);
+    if (!sc_commandDecode(value, &command, &operand))
     {
         sc_regSet(ERRORFLAG, 1);
         return 1;
     }
+    sc_accumSet(command);
+    command += 7;
 
     value = 0;
 
@@ -82,7 +84,7 @@ int CU(void)
             mt_setbgcolor(BLACK);
 
             int value;
-            fscanf(stdin, "%d", &value); //
+            fscanf(stdin, "%x", &value); //
 
             if (value > 65535)
             {
@@ -90,7 +92,7 @@ int CU(void)
                 break;
             }
 
-            sc_accumSet(value);
+            // sc_accumSet(value);
             sc_memorySet(operand, value);
             mt_setbgcolor(BLACK);
             clrMessageBox(x, y);

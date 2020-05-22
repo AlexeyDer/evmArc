@@ -29,7 +29,6 @@ void reset(int siq)
 
 void console()
 {
-
 	enum Key key = NONE;
 	int value;
 	pointer_mem = 0;
@@ -486,6 +485,7 @@ int visualCounter()
 
 void visualOperation()
 {
+	int command = 0, operand = 0;
 	int value;
 	visualRegGet(OPER, &value);
 	if (value)

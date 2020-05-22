@@ -142,51 +142,6 @@ int sc_countInkrement()
     return 0;
 }
 
-int sc_checkCommand(int check_command)
-{
-    if (
-        check_command == READ ||
-        check_command == WRITE ||
-        check_command == LOAD ||
-        check_command == STORE ||
-        check_command == ADD ||
-        check_command == SUB ||
-        check_command == DIVIDE ||
-        check_command == MUL ||
-        check_command == JUMP ||
-        check_command == JNEG ||
-        check_command == JZ ||
-        check_command == HALT ||
-        check_command == NOT ||
-        check_command == AND ||
-        check_command == OR ||
-        check_command == XOR ||
-        check_command == JNS ||
-        check_command == JC ||
-        check_command == JNC ||
-        check_command == JP ||
-        check_command == JNP ||
-        check_command == CHL ||
-        check_command == SHR ||
-        check_command == RCL ||
-        check_command == RCR ||
-        check_command == NEG ||
-        check_command == ADDC ||
-        check_command == SUBC ||
-        check_command == LOGLC ||
-        check_command == LOGRC ||
-        check_command == RCCL ||
-        check_command == RCCR ||
-        check_command == MOVA ||
-        check_command == MOVR ||
-        check_command == MOVCA ||
-        check_command == MOVCR)
-    {
-        return 1;
-    }
-    return 0;
-}
-
 int sc_commandEncode(int command, int operand, int *value)
 {
     if ((command > 0 && command < 10) ||
@@ -202,25 +157,28 @@ int sc_commandEncode(int command, int operand, int *value)
 
     if (operand < 0 || operand > 127)
     {
-        sc_regSet(ERROROPER, 1);
         return 1;
     }
 
-    *value = *value | (command << 7);
-    *value = *value | operand;
-
-    return 0;
+    if (operand < N)
+    {
+        sc_regSet(ERRORCOMS, 0);
+        *value = (command << 7) | operand;
+        return 0;
+    }
+    sc_regSet(ERRORCOMS, 1);
+    return ERRORCOMS;
 }
 
 int sc_commandDecode(int value, int *command, int *operand)
 {
+    int buffer;
+    buffer = (value >> 7) & 0x7F;
     if ((value >> 14) != 0)
     {
         sc_regSet(ERRORCOMS, 1);
-        return 1;
+        return ERRORCOMS;
     }
-
-    *command = value >> 7;
     if ((*command > 0 && *command < 10) ||
         (*command > 11 && *command < 20) ||
         (*command > 21 && *command < 30) ||
@@ -232,53 +190,19 @@ int sc_commandDecode(int value, int *command, int *operand)
         return 1;
     }
 
-    *operand = value & 0x7;
-
+    sc_regSet(ERRORCOMS, 0);
+    *command = buffer;
+    buffer = value & 0x7;
+    if (buffer < 100)
+    {
+        *operand = buffer;
+    }
+    else
+    {
+        *command = -1;
+        *operand = -1;
+        sc_regSet(ERRORCOMS, 1);
+        return ERROROPER;
+    }
     return 0;
 }
-
-// int commands[] = {
-//     0x10, 0x11, 0x20, 0x21, 0x30, 0x31, 0x32,
-//     0x33, 0x40, 0x41, 0x42, 0x43, 0x51, 0x52,
-//     0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
-//     0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66,
-//     0x67, 0x68, 0x69, 0x70, 0x71, 0x72, 0x73,
-//     0x74, 0x75, 0x76};
-
-// int sc_commandDecode(int value, int *command, int *operand)
-// {
-//     int buf = 0;
-//     int attribute;
-//     int buf_command;
-//     int buf_operand;
-
-//     attribute = (value >> 14) & 1;
-//     if (attribute == 0)
-//     {
-//         buf_command = (value >> 7) & 0x7F;
-//         buf_operand = value & 0x7F;
-
-//         for (int i = 0; i < 37; i++)
-//         {
-//             if (buf_command == commands[i])
-//             {
-//                 buf = 1;
-//             }
-//         }
-
-//         if ((buf == 1) && ((*operand >= 0) && (*operand < N)))
-//         {
-//             *command = buf_command;
-//             *operand = buf_operand;
-//         }
-//         else if (buf == 0)
-//         {
-//             return -1;
-//         }
-//         return 0;
-//     }
-//     else
-//     {
-//         return -1;
-//     }
-// }

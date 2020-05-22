@@ -34,8 +34,8 @@ void settimer(struct itimerval *nval);
 #define IO 6
 #define FLAGS 7
 
-static int command;
-static int operand;
+// static int command;
+// static int operand;
 
 static int pointer_mem;
 
