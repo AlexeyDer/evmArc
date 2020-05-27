@@ -1,10 +1,6 @@
 #ifndef MYCONSOLE_H
 #define MYCONSOLE_H
 
-#include "myTerm.h"
-#include "myBigChar.h"
-#include "mySimpleComputer.h"
-#include "myReadKey.h"
 #include "cpu.h"
 #include <signal.h>
 #include <sys/time.h>
@@ -34,15 +30,9 @@ void settimer(struct itimerval *nval);
 #define IO 6
 #define FLAGS 7
 
-// static int command;
-// static int operand;
-
-static int pointer_mem;
-
 static int visual_access;
 
 //Console part
-void console();
 void reset(int siq);
 void run(int siq);
 

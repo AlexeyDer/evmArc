@@ -1,10 +1,6 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include "mySimpleComputer.h"
-#include "myReadKey.h"
-#include "myConsole.h"
-
 #define READ 10
 #define WRITE 11
 
@@ -19,7 +15,6 @@
 #define JUMP 40
 #define JNEG 41
 #define JZ 42
-#define JB 44
 #define JC 56
 #define SET 78
 #define HALT 43

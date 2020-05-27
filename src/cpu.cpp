@@ -1,4 +1,7 @@
-#include "cpu.h"
+#include "../include/cpu.h"
+#include "../include/mySimpleComputer.h"
+#include "../include/myTerm.h"
+#include "../include/myConsole.h"
 
 int ALU(int command, int operand)
 {
@@ -50,17 +53,15 @@ int ALU(int command, int operand)
 
 int CU(void)
 {
-    int command, operand;
     int value;
+    int command, operand;
 
     sc_memoryGet(pointer_mem, &value);
-    if (!sc_commandDecode(value, &command, &operand))
+    if (sc_commandDecode(value, &command, &operand))
     {
         sc_regSet(ERRORFLAG, 1);
         return 1;
     }
-    sc_accumSet(command);
-    command += 7;
 
     value = 0;
 
@@ -92,8 +93,8 @@ int CU(void)
                 break;
             }
 
-            // sc_accumSet(value);
             sc_memorySet(operand, value);
+
             mt_setbgcolor(BLACK);
             clrMessageBox(x, y);
             setVisualNull();
@@ -105,7 +106,7 @@ int CU(void)
             mt_getscreensize(&n, &m);
             int x = n / 3 + STD_DX_MEM + 10, y = m / 4 + 2;
 
-            mt_gotoXY(x, y);
+            mt_gotoXY(x, y + 8);
             mt_setfgcolor(RED);
             printf("O");
             mt_gotoXY(x + 1, y);
@@ -114,65 +115,65 @@ int CU(void)
 
             mt_gotoXY(x + 1, y + 1);
             mt_setbgcolor(BLACK);
-            printf("%d\n", memory[operand]);
+
+            sc_memoryGet(operand, &value);
+            printf("%02x", value);
+            getchar();
             break;
         }
         case LOAD:
-            sc_accumSet(memory[operand]);
+            sc_memoryGet(operand, &value);
+            accumulator = value;
             break;
         case STORE:
-            sc_accumGet(&memory[operand]);
+        {
+            sc_memorySet(operand, accumulator);
             break;
-
+        }
         case JUMP:
             if (operand > 99 || operand < 0)
             {
                 sc_regSet(EG, 1);
                 break;
             }
-            instruction_counter = operand;
-            instruction_counter--;
+            pointer_mem = operand;
             break;
         case JNEG:
             if (accumulator < 0)
             {
-                instruction_counter = operand;
-                instruction_counter--;
+                if (operand > 99 || operand < 0)
+                {
+                    sc_regSet(EG, 1);
+                    break;
+                }
+                pointer_mem = operand;
             }
             break;
         case JZ:
             if (accumulator == 0)
             {
-                instruction_counter = operand;
-                instruction_counter--;
+                if (operand > 99 || operand < 0)
+                {
+                    sc_regSet(EG, 1);
+                    break;
+                }
+                pointer_mem = operand;
             }
             break;
         case JC:
             sc_regGet(OD, &value);
             if (value == 1)
             {
-                instruction_counter = operand;
-                instruction_counter--;
+                pointer_mem = operand;
             }
             break;
-        case JB:
-            if (accumulator > 0)
-            {
-                instruction_counter = operand;
-                instruction_counter--;
-            }
-            break;
-
         case SET:
             accumulator = operand;
             break;
-
         case HALT:
             return 2;
             break;
         default:
-            if (command == 0)
-                sc_regSet(ERRORFILE, 1);
             break;
         }
     }

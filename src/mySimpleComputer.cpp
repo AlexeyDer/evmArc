@@ -1,12 +1,16 @@
-#include "mySimpleComputer.h"
+#include "../include/mySimpleComputer.h"
+
+int memory[N];
+int instruction_counter, accumulator;
+int registr;
+int pointer_mem;
 
 int sc_memoryInit()
 {
     for (int i = 0; i < N; i++)
     {
-        memory[i] = 0x0;
+        memory[i] = 0;
     }
-
     return 0;
 }
 
@@ -71,7 +75,9 @@ int sc_memoryLoad(char *filename)
 int sc_regInit(void)
 {
     registr = registr & 0;
-
+    instruction_counter = 0;
+    accumulator = 0;
+    pointer_mem = 0;
     return 0;
 }
 
@@ -110,38 +116,6 @@ int sc_regGet(int flag, int *value)
     return ERRORFLAG;
 }
 
-int sc_accumGet(int *value)
-{
-    *value = accumulator;
-    return 0;
-}
-
-int sc_accumSet(int value)
-{
-    accumulator = value;
-    return 0;
-}
-
-int sc_countGet(int *value)
-{
-    *value = instruction_counter;
-    return 0;
-}
-
-int sc_countSet(int value)
-{
-    instruction_counter = value;
-    return 0;
-}
-
-int sc_countInkrement()
-{
-    if (instruction_counter == N - 1)
-        return -1;
-    instruction_counter++;
-    return 0;
-}
-
 int sc_commandEncode(int command, int operand, int *value)
 {
     if ((command > 0 && command < 10) ||
@@ -172,37 +146,31 @@ int sc_commandEncode(int command, int operand, int *value)
 
 int sc_commandDecode(int value, int *command, int *operand)
 {
-    int buffer;
-    buffer = (value >> 7) & 0x7F;
-    if ((value >> 14) != 0)
-    {
-        sc_regSet(ERRORCOMS, 1);
-        return ERRORCOMS;
-    }
-    if ((*command > 0 && *command < 10) ||
-        (*command > 11 && *command < 20) ||
-        (*command > 21 && *command < 30) ||
-        (*command > 33 && *command < 40) ||
-        (*command > 44 && *command < 51) ||
-        *command > 79)
+    if (value >> 14 != 0)
+        return -1;
+
+    int c = (value >> 7) & 0x7F;
+    int op = value & 0x7F;
+
+    if ((c > 0 && c < 10) ||
+        (c > 11 && c < 20) ||
+        (c > 21 && c < 30) ||
+        (c > 33 && c < 40) ||
+        (c > 44 && c < 51) ||
+        c > 79)
     {
         sc_regSet(ERRORCOMS, 1);
         return 1;
     }
 
-    sc_regSet(ERRORCOMS, 0);
-    *command = buffer;
-    buffer = value & 0x7;
-    if (buffer < 100)
+    if ((op < 0 || op > 127))
     {
-        *operand = buffer;
+        sc_regSet(ERROROPER, 1);
+        return 1;
     }
-    else
-    {
-        *command = -1;
-        *operand = -1;
-        sc_regSet(ERRORCOMS, 1);
-        return ERROROPER;
-    }
+
+    *command = c;
+    *operand = op;
+
     return 0;
 }

@@ -9,12 +9,12 @@
 #define ERRORFILE 3
 #define ERRORCOMS 4
 #define ERROROPER 5
-#define IGNORTACT 6
+#define IGNOREPULSE 6
 
-static int memory[N];
-static int registr;
-static int instruction_counter;
-static int accumulator;
+extern int memory[N];
+extern int registr;
+extern int instruction_counter, accumulator;
+extern int pointer_mem;
 
 #define OD 0b00000001 // переполнение при выполнении операции
 #define DE 0b00000010 // ошибка деления на 0
@@ -42,20 +42,8 @@ int sc_regSet(int flag, int value); // sets the value of the flag register
 
 int sc_regGet(int flag, int *value); // gets the value of the flag
 
-int sc_commandEncode(int command, int operand, int *value); // encodes a command with the specified number and operand and put result in Value
+int sc_commandEncode(int command, int operand, int *value);
 
-int sc_commandDecode(int value, int *command, int *operand); // decodes the value that command SC
-
-//
-
-int sc_accumGet(int *value);
-
-int sc_accumSet(int value);
-
-int sc_countGet(int *value);
-
-int sc_countSet(int value);
-
-int sc_countInkrement();
+int sc_commandDecode(int value, int *command, int *operand);
 
 #endif

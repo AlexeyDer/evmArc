@@ -1,4 +1,5 @@
-#include "myReadKey.h"
+#include "../include/myReadKey.h"
+#include "../include/myTerm.h"
 
 struct termios new_term_state;
 struct termios termState;
