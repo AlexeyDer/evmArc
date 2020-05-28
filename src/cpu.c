@@ -85,7 +85,7 @@ int CU(void)
             mt_setbgcolor(BLACK);
 
             int value;
-            fscanf(stdin, "%x", &value); //
+            fscanf(stdin, "%x", &value);
 
             if (value > 65535)
             {
@@ -171,6 +171,7 @@ int CU(void)
             accumulator = operand;
             break;
         case HALT:
+            sc_regSet(IGNOREPULSE, 0);
             return 2;
             break;
         default:

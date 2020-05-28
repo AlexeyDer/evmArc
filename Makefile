@@ -8,15 +8,19 @@ LIB		:= lib
 
 LIBRARIES	:=
 EXECUTABLE	:= main
+EXECUTABLE2	:= main.sat
 
 
-all: $(BIN)/$(EXECUTABLE)
+all: $(BIN)/$(EXECUTABLE) $(BIN)/$(EXECUTABLE2)
 
 run: clean all
 	clear
 	./$(BIN)/$(EXECUTABLE)
 
-$(BIN)/$(EXECUTABLE): $(SRC)/*.c
+$(BIN)/$(EXECUTABLE2): $(SRC)/asm/*.c
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $< -o $@ $(LIBRARIES)
+
+$(BIN)/$(EXECUTABLE): $(SRC)/*.c 
 	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
 
 clean:

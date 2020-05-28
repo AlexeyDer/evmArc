@@ -22,6 +22,7 @@ void run(int siq)
 	{
 		return;
 	}
+	CU();
 	++pointer_mem;
 	if (pointer_mem == N)
 	{

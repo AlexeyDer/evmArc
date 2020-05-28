@@ -131,17 +131,13 @@ int sc_commandEncode(int command, int operand, int *value)
 
     if (operand < 0 || operand > 127)
     {
-        return 1;
+        sc_regSet(ERROROPER, 1);
+        return ERROROPER;
     }
 
-    if (operand < N)
-    {
-        sc_regSet(ERRORCOMS, 0);
-        *value = (command << 7) | operand;
-        return 0;
-    }
-    sc_regSet(ERRORCOMS, 1);
-    return ERRORCOMS;
+    sc_regSet(ERRORCOMS, 0);
+    *value = (command << 7) | operand;
+    return 0;
 }
 
 int sc_commandDecode(int value, int *command, int *operand)

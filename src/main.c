@@ -21,6 +21,20 @@ int main()
     signal(SIGUSR1, reset);
     settimer(&nval);
 
+    FILE *test;
+    test = fopen("output.o", "rb+");
+    while (!feof(test))
+    {
+        int data[3] = {0};
+        fread(data, sizeof(int) * 3, 1, test);
+        if (data[0] == 0 && data[1] == 0 && data[2] == 0)
+            break;
+        int value = 0;
+        sc_commandEncode(data[1], data[2], &value);
+        sc_memorySet(data[0], value);
+    }
+    fclose(test);
+
     while (key != EXIT)
     {
         mt_clrscr();
@@ -88,14 +102,9 @@ int main()
                 pointer_mem = 0;
                 break;
             case STEP:
-            {
-                int v = CU();
-                if (v == 2)
-                {
-                    return 0;
-                }
+                CU();
+                pointer_mem++;
                 break;
-            }
             case ENTER:
                 setOperation();
                 break;
