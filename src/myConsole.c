@@ -5,6 +5,9 @@
 #include "../include/myReadKey.h"
 #include "../include/cpu.h"
 
+int visual_access;
+struct itimerval nval;
+
 void settimer(struct itimerval *nval)
 {
 	nval->it_interval.tv_sec = 0;
@@ -15,6 +18,10 @@ void settimer(struct itimerval *nval)
 
 void run(int siq)
 {
+	if (siq != SIGALRM)
+	{
+		return;
+	}
 	++pointer_mem;
 	if (pointer_mem == N)
 	{
@@ -27,28 +34,15 @@ void run(int siq)
 
 void reset(int siq)
 {
+	if (siq != SIGUSR1)
+	{
+		return;
+	}
 	sc_memoryInit();
 	sc_regInit();
 	// sc_countSet(0);
 	instruction_counter = 0;
 	setVisualNull();
-}
-
-int readFromConsole()
-{
-	rk_myTermRestore(NULL);
-	mt_gotoXY(24, 21); //
-	int value;
-	scanf("%x", &value);
-	return value;
-}
-
-int writeFromConsole(int value)
-{
-	rk_myTermRestore(NULL);
-	mt_gotoXY(24, 30); //
-	printf("%x", value);
-	return 0;
 }
 
 int setVisualNull()
@@ -66,32 +60,6 @@ int updateMemVisual()
 	visualRegSet(INSTR, 0);
 
 	return 0;
-}
-
-void messageBox(int x, int y, int dx, int dy)
-{
-	rk_myTermRestore(NULL); /*return std. term settings*/
-
-	mt_setfgcolor(BLACK);
-	mt_setbgcolor(WHITE);
-
-	for (int i = y; i < y + 60; i++)
-	{
-		for (int j = x; j < x + 5; j++)
-		{
-			mt_gotoXY(j, i);
-			bc_printA(" ");
-		}
-	}
-	mt_setbgcolor(BLACK);
-	for (int i = y + 8; i < y + 50; i++)
-	{
-		mt_gotoXY(x + 2, i);
-		bc_printA(" ");
-	}
-	mt_setbgcolor(WHITE);
-	bc_box(x, y, dx, dy);
-	setVisualNull();
 }
 
 void clrMessageBox(int x, int y)
@@ -140,7 +108,6 @@ void setOperation()
 		value = value | (0x1 << 14);
 	}
 
-	// sc_accumSet(value);
 	accumulator = value;
 	sc_memorySet(pointer_mem, value);
 

@@ -24,23 +24,23 @@ extern int pointer_mem;
 
 // Memory //
 
-int sc_memoryInit(); // Initialization array memory
+int sc_memoryInit();
 
-int sc_memorySet(int address, int value); // Set value to address
+int sc_memorySet(int address, int value);
 
-int sc_memoryGet(int address, int *value); // Get value of address
+int sc_memoryGet(int address, int *value);
 
-int sc_memorySave(char *filename); // Save to file in binary view
+int sc_memorySave(char *filename);
 
-int sc_memoryLoad(char *filename); // Load of file RAM
+int sc_memoryLoad(char *filename);
 
 // Register //
 
-int sc_regInit(void); // It initializaion register of flags zero value
+int sc_regInit(void);
 
-int sc_regSet(int flag, int value); // sets the value of the flag register
+int sc_regSet(int flag, int value);
 
-int sc_regGet(int flag, int *value); // gets the value of the flag
+int sc_regGet(int flag, int *value);
 
 int sc_commandEncode(int command, int operand, int *value);
 

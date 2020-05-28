@@ -9,7 +9,7 @@
 typedef void (*sighandler_t)(int);
 sighandler_t signal(int signum, sighandler_t handler);
 
-static struct itimerval nval;
+extern struct itimerval nval;
 
 void settimer(struct itimerval *nval);
 
@@ -30,7 +30,7 @@ void settimer(struct itimerval *nval);
 #define IO 6
 #define FLAGS 7
 
-static int visual_access;
+extern int visual_access;
 
 //Console part
 void reset(int siq);
@@ -38,19 +38,14 @@ void run(int siq);
 
 int setVisualNull();
 
-int readFromConsole();
-int writeFromConsole(int value);
-
 int updateMemVisual();
 int visualRegGet(int flag, int *value);
 int visualRegSet(int flag, int value);
 
 void setAcc();
-int setInstrCounter();
 void setPointer();
 void setOperation();
 
-void messageBox(int x, int y, int dx, int dy);
 void clrMessageBox(int x, int y);
 
 //Visual part

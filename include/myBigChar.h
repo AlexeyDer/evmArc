@@ -24,8 +24,8 @@
 #define ACS_CKBOARD "a"
 #define BC_SIZE_DEFAULT 2
 
-static int BC_SIZE;
-static int bigChar[2];
+extern int BC_SIZE;
+extern int bigChar[2];
 extern enum Color color;
 
 int bc_box(int, int, int, int);

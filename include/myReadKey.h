@@ -30,7 +30,7 @@ enum Key
 
 int rk_readKey(enum Key *key);
 int rk_myTermSave(struct termios *termState);
-int rk_myTermRestore(struct termios *currState);
+int rk_myTermRestore();
 int rk_myTermRegime(struct termios *currState, int regime, int vtime, int vmin, int echo, int sigint);
 void termInit();
 

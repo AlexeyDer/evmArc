@@ -17,8 +17,8 @@ int main()
     sc_regSet(IGNOREPULSE, 0);
 
     termInit();
-    signal(SIGUSR1, reset);
     signal(SIGALRM, run);
+    signal(SIGUSR1, reset);
     settimer(&nval);
 
     while (key != EXIT)
@@ -84,8 +84,8 @@ int main()
                 raise(SIGUSR1);
                 break;
             case RUN:
-                pointer_mem = 0;
                 sc_regSet(IGNOREPULSE, 1);
+                pointer_mem = 0;
                 break;
             case STEP:
             {
@@ -110,7 +110,7 @@ int main()
         }
     }
 
-    rk_myTermRestore(NULL);
+    rk_myTermRestore();
     mt_gotoXY(60, 1);
     return 0;
 }

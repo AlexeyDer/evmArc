@@ -119,7 +119,7 @@ int rk_myTermSave(struct termios *termState)
     return tcgetattr(0, termState);
 }
 
-int rk_myTermRestore(struct termios *currState)
+int rk_myTermRestore()
 {
     return tcsetattr(0, TCSADRAIN, &termState);
 }

@@ -1,5 +1,7 @@
-#include "myBigChar.h"
+#include "../include/myBigChar.h"
 
+int BC_SIZE;
+int bigChar[2];
 int symbolbig[2] = {0, 0};
 
 int bc_printA(char *ch)
