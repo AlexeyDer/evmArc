@@ -15,7 +15,7 @@
 
 int str2sc_word(char *str, int *value);
 int getCommand(char *str);
-int pars_line(char *str, int *addr, int *value);
+int parsingLine(char *str, int *addr, int *value);
 void print_error(char *line, int line_cnt, int err);
 int test_argv(char *argv[]);
 int main(int argc, char *argv[]);
