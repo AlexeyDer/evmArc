@@ -17,8 +17,8 @@ run: clean all
 	clear
 	./$(BIN)/$(EXECUTABLE)
 
-$(BIN)/$(EXECUTABLE2): $(SRC)/asm/*.c
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $< -o $@ $(LIBRARIES)
+$(BIN)/$(EXECUTABLE2): asm/*.c 
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $< -o $@ $(LIBRARIES)  $(SRC)/mySimpleComputer.c 
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.c 
 	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)

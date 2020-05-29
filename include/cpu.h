@@ -15,11 +15,9 @@
 #define JUMP 40
 #define JNEG 41
 #define JZ 42
-#define JC 56
+#define JNS 55
 #define SET 78
 #define HALT 43
-
-// int memory_tmp[100];
 
 int ALU(int command, int operand);
 int CU(void);

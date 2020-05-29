@@ -122,8 +122,7 @@ int CU(void)
             break;
         }
         case LOAD:
-            sc_memoryGet(operand, &value);
-            accumulator = value;
+            sc_memoryGet(operand, &accumulator);
             break;
         case STORE:
         {
@@ -136,7 +135,7 @@ int CU(void)
                 sc_regSet(EG, 1);
                 break;
             }
-            pointer_mem = operand;
+            pointer_mem = --operand;
             break;
         case JNEG:
             if (accumulator < 0)
@@ -146,7 +145,7 @@ int CU(void)
                     sc_regSet(EG, 1);
                     break;
                 }
-                pointer_mem = operand;
+                pointer_mem = --operand;
             }
             break;
         case JZ:
@@ -157,14 +156,18 @@ int CU(void)
                     sc_regSet(EG, 1);
                     break;
                 }
-                pointer_mem = operand;
+                pointer_mem = --operand;
             }
             break;
-        case JC:
-            sc_regGet(OD, &value);
-            if (value == 1)
+        case JNS:
+            if (accumulator >= 0)
             {
-                pointer_mem = operand;
+                if (operand > 99 || operand < 0)
+                {
+                    sc_regSet(EG, 1);
+                    break;
+                }
+                pointer_mem = --operand;
             }
             break;
         case SET:
